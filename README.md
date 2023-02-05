@@ -1,4 +1,4 @@
-# autobusco is a python script to run BUSCO to all files in a folder
+# autobusco is a python script to run BUSCO to all files in a folder and autoplot them
 
 # ###INSTRUCTIONS###
 1) join the folder where your files are via terminal (busco must be installed)
