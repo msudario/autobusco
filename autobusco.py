@@ -1,71 +1,153 @@
 #!/usr/bin/env python3
+# coding: utf-8
 
 import os
-import glob
 import subprocess
 import shutil
 import argparse
-
+import wget
 
 parser = argparse.ArgumentParser(
-    description='running autobusco')
-parser.add_argument('-f', '--format', metavar='', type=str, required=True,
-                    help='Valid BUSCO format i.e: fasta, fna')
+    description='Welcome to autoBUSCO')
+
 parser.add_argument('-l', '--lineage', metavar='', type=str, required=True,
                     help='Valid BUSCO lineage i.e: enterobacterales_odb10')
 parser.add_argument('-i', '--input', metavar='', type=str, required=True,
                     help='input folder with the files')
 parser.add_argument('-m', '--mode', metavar='', type=str, required=True,
                     help='BUSCO mode (genome, transcriptome or proteins')
+parser.add_argument('-c', '--cpu', metavar='', type=str, required=False,
+                    help='CPU thread usage (OPTIONAL)')
 
 args = parser.parse_args()
 
-folder_input = f'{args.input}'
+folder_input = os.path.expanduser(f'{args.input}')
+extensoes = ['.fasta']
 
-for i in glob.glob(os.path.join(folder_input, f'*.{args.format}')):
-    if args.format == 'fna' or 'faa' or 'fasta':
+def run_busco(folder_input):
+    os.chdir(folder_input)
+    if 'results_autobusco' not in os.listdir(folder_input):
+                    os.mkdir('results_autobusco')
+    if args.cpu:
+        os.chdir(os.path.join(folder_input, 'results_autobusco'))
+        for arquivos in os.listdir(folder_input):
+            for extensao in extensoes:
+                if arquivos.endswith(extensao): 
+                    with open(os.path.join(folder_input, arquivos), "r") as file:
+                        first_line = file.readline().split()
+                        if 'coverage' in first_line:
+                            locus_tag = first_line[1][0] + first_line[2]
+                            nome_qnd_n_tem_info = arquivos.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '').replace('fasta', '').replace('fna', '').replace('faa', '')
+                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{nome_qnd_n_tem_info}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
 
-        command_line = [
-            'busco', '-i', i, '-l', f'{args.lineage}',  '-o', f'{i}'.split(
-                "/")[-1].replace(f'.{args.format}', ''), '-m', f'{args.mode}', '-c', '5'
-        ]
+                            subprocess.call(command_line)
 
-        subprocess.call(command_line)
+                        elif first_line[5] == 'chromosome' or first_line[5] == 'contig' or first_line[5] == 'complete':
+
+                            locus_tag = first_line[1][0] + first_line[2]
+                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
+                        
+                            command_line = ['busco', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}', '-c', f'{args.cpu}']
+
+                            subprocess.call(command_line)
+
+                        else: 
+                            locus_tag = first_line[4] + first_line[5]
+                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
+
+                            command_line = ['busco', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
+
+                            subprocess.call(command_line)
+
     else:
-        print('Please enter a valid format (faa, fasta, fna)')
+        for arquivos in os.listdir(folder_input):
+            for extensao in extensoes:
+                if arquivos.endswith(extensao): 
+                    with open(os.path.join(folder_input, arquivos), "r") as file:
+                        first_line = file.readline().split()
+                        if 'coverage' in first_line:
+                            locus_tag = first_line[1][0] + first_line[2]
+                            nome_qnd_n_tem_info = arquivos.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '').replace('fasta', '').replace('fna', '').replace('faa', '')
+                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{nome_qnd_n_tem_info}' , '-m', f'{args.mode}']
+
+                            subprocess.call(command_line)
+
+                        elif first_line[5] == 'chromosome' or first_line[5] == 'contig' or first_line[5] == 'complete':
+
+                            locus_tag = first_line[1][0] + first_line[2]
+                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
+                        
+                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}']
+
+                            subprocess.call(command_line)
+
+                        else: 
+                            locus_tag = first_line[4] + first_line[5]
+                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
+
+                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}']
+
+                            subprocess.call(command_line)
 
 
-######################### SEPARANDO OS RESULTADOS #######################
+                        
+            
+            
 
-while True:
-    auto_plot = input('Would you like to plot the files? (y/n): ')
-    if auto_plot == "y":
-        path_to_generatepy = input(
-            'Select the path to BUSCO "generate_plot.py":')
-        if not os.path.exists(os.path.join(path_to_generatepy, "generate_plot.py")):
-            print(
-                f'Error: autobusco could not find "generate_plot.py" in {path_to_generatepy}')
-        else:
-            os.chdir(folder_input)
-            if 'results_autobusco' not in os.listdir():
-                os.mkdir('results_autobusco')
-            for file in os.listdir(folder_input):
-                d = os.path.join(folder_input, file)
-                if os.path.isdir(d):
-                    os.chdir(d)
-                txts = [f for f in os.listdir() if '.txt' in f.lower()]
-                for files in txts:
-                    new_path = folder_input + '/results_autobusco/' + files
-                    shutil.move(files, new_path)
-            new_path2 = folder_input + '/results_autobusco/'
-            command_line = [
-                'python', f'{path_to_generatepy}/generate_plot.py', '-wd', f'{new_path2}'
-            ]
-            subprocess.call(command_line)
-            print('Thank You!')
+def plot_results(folder_input):
+    while True:
+        auto_plot = input('Would you like to plot the files? (y/n): ')
+        if auto_plot == "y":
+            caminho_autobusco = os.path.join(folder_input, 'results_autobusco')
+            path_to_generatepy = os.path.join(caminho_autobusco,'busco_downloads', 'generate_plot.py')
+
+            if not os.path.exists(path_to_generatepy):
+                os.chdir(os.path.join(caminho_autobusco, 'busco_downloads'))
+                os.system('wget "https://gitlab.com/ezlab/busco/-/raw/master/scripts/generate_plot.py?inline=false" -O generate_plot.py')
+                
+                for file in os.listdir(caminho_autobusco):
+                    d = os.path.join(caminho_autobusco, file)
+                    if os.path.isdir(d):
+                        os.chdir(d)
+                    txts = [f for f in os.listdir() if '.txt' in f.lower()]
+                    for files in txts:
+                        new_path = os.path.join(caminho_autobusco, files)
+                        shutil.copy(files, new_path)
+                
+                command_line = [
+                    'python3', f'{path_to_generatepy}', '-wd', f'{caminho_autobusco}'
+                    ]
+                subprocess.call(command_line)
+                break
+
+            elif os.path.exists(path_to_generatepy):
+                for file in os.listdir(caminho_autobusco):
+                    d = os.path.join(caminho_autobusco, file)
+                    if os.path.isdir(d):
+                        os.chdir(d)
+                    txts = [f for f in os.listdir() if '.txt' in f.lower()]
+                    for files in txts:
+                        new_path = os.path.join(caminho_autobusco, files)
+                        shutil.copy(files, new_path)
+                
+                command_line = [
+                    'python3', f'{path_to_generatepy}', '-wd', f'{caminho_autobusco}'
+                    ]
+                subprocess.call(command_line)
+                break
+
+            else:
+                print(f'Error: autobusco could not find "generate_plot.py" in {folder_input}')
+
+        elif auto_plot == 'n':
+            print('Thank you!')
             break
-    elif auto_plot == 'n':
-        print('Thank you!')
-        break
-    else:
-        print("Would you like to plot busco results? Please type 'y' for yes or 'n' for no")
+        else:
+            print("Would you like to plot busco results? Please type 'y' for yes or 'n' for no")
+
+def process_files(folder_input):
+    run_busco(folder_input)
+    plot_results(folder_input)
+
+if __name__ == '__main__':
+    process_files(folder_input)
