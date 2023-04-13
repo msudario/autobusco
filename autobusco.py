@@ -47,7 +47,7 @@ def run_busco(folder_input):
                             locus_tag = first_line[1][0] + first_line[2]
                             output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
                         
-                            command_line = ['busco', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}', '-c', f'{args.cpu}']
+                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}', '-c', f'{args.cpu}']
 
                             subprocess.call(command_line)
 
@@ -55,7 +55,7 @@ def run_busco(folder_input):
                             locus_tag = first_line[4] + first_line[5]
                             output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
 
-                            command_line = ['busco', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
+                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
 
                             subprocess.call(command_line)
 
