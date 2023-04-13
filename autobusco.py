@@ -24,71 +24,34 @@ args = parser.parse_args()
 folder_input = os.path.expanduser(f'{args.input}')
 extensoes = ['.fasta', '.fna', '.fa']
 
+
 def run_busco(folder_input):
     os.chdir(folder_input)
     if 'results_autobusco' not in os.listdir(folder_input):
                     os.mkdir('results_autobusco')
+                   
     if args.cpu:
         os.chdir(os.path.join(folder_input, 'results_autobusco'))
         for arquivos in os.listdir(folder_input):
             for extensao in extensoes:
                 if arquivos.endswith(extensao): 
                     with open(os.path.join(folder_input, arquivos), "r") as file:
-                        first_line = file.readline().split()
-                        if 'coverage' in first_line:
-                            locus_tag = first_line[1][0] + first_line[2]
-                            nome_qnd_n_tem_info = arquivos.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '').replace('fasta', '').replace('fna', '').replace('faa', '')
-                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{nome_qnd_n_tem_info}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
+                        output = arquivos.replace('.fna', '').replace('.fasta', '').replace('.fa', '')
+                        command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
 
-                            subprocess.call(command_line)
-
-                        elif first_line[5] == 'chromosome' or first_line[5] == 'contig' or first_line[5] == 'complete':
-
-                            locus_tag = first_line[1][0] + first_line[2]
-                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
-                        
-                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}', '-c', f'{args.cpu}']
-
-                            subprocess.call(command_line)
-
-                        else: 
-                            locus_tag = first_line[4] + first_line[5]
-                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
-
-                            command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}', '-c', f'{args.cpu}']
-
-                            subprocess.call(command_line)
+                        subprocess.call(command_line)
 
     else:
+        os.chdir(os.path.join(folder_input, 'results_autobusco'))
         for arquivos in os.listdir(folder_input):
             for extensao in extensoes:
                 if arquivos.endswith(extensao): 
-                    with open(os.path.join(folder_input, arquivos), "r") as file:
-                        first_line = file.readline().split()
-                        if 'coverage' in first_line:
-                            locus_tag = first_line[1][0] + first_line[2]
-                            nome_qnd_n_tem_info = arquivos.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '').replace('fasta', '').replace('fna', '').replace('faa', '')
-                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{nome_qnd_n_tem_info}' , '-m', f'{args.mode}']
+                    with open(os.path.join(folder_input, arquivos), "r") as file: 
+                        output = arquivos.replace('.fna', '').replace('.fasta', '').replace('.fa', '')
+                        command_line = ['busco', '-i', os.path.join(folder_input, f'{arquivos}'), '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}']
 
-                            subprocess.call(command_line)
-
-                        elif first_line[5] == 'chromosome' or first_line[5] == 'contig' or first_line[5] == 'complete':
-
-                            locus_tag = first_line[1][0] + first_line[2]
-                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
+                        subprocess.call(command_line)
                         
-                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{output}', '-m', f'{args.mode}']
-
-                            subprocess.call(command_line)
-
-                        else: 
-                            locus_tag = first_line[4] + first_line[5]
-                            output = locus_tag.replace(">","").replace("(", "").replace(")", "").replace(";","").replace(",","").replace("/","").replace("|","").replace("\\","").replace("[","").replace("]","").replace('.','').replace('-', '')
-
-                            command_line = ['busco', '-i', f'{arquivos}', '-l', f'{args.lineage}',  '-o', f'{output}' , '-m', f'{args.mode}']
-
-                            subprocess.call(command_line)
-
 
                         
             
