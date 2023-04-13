@@ -22,7 +22,7 @@ parser.add_argument('-c', '--cpu', metavar='', type=str, required=False,
 args = parser.parse_args()
 
 folder_input = os.path.expanduser(f'{args.input}')
-extensoes = ['.fasta']
+extensoes = ['.fasta', '.fna', '.fa']
 
 def run_busco(folder_input):
     os.chdir(folder_input)
