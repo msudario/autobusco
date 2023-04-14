@@ -5,7 +5,6 @@ import os
 import subprocess
 import shutil
 import argparse
-import wget
 
 parser = argparse.ArgumentParser(
     description='Welcome to autoBUSCO')
