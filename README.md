@@ -16,5 +16,6 @@ After running Busco analyses, you will be asked whether you want to plot the res
     
 #
 * Must run it in terminal/enviroment with busco installed
-* If you want to autoplot them, you must have an internet connection to download the script from BUSCO."
+* If you want to autoplot them, you must have an internet connection to download the script from BUSCO.
+* You must have R installed to plot with BUSCO's script
 
