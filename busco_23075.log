@@ -1,0 +1,45 @@
+2023-08-11 14:21:12 DEBUG:busco.run_BUSCO	Command line: /usr/bin/busco
+2023-08-11 14:21:12 INFO:busco.run_BUSCO	***** Start a BUSCO v5.2.2 analysis, current time: 08/11/2023 14:21:12 *****
+2023-08-11 14:21:12 DEBUG:busco.ConfigManager	Getting config file
+2023-08-11 14:21:12 INFO:busco.ConfigManager	Configuring BUSCO with local environment
+2023-08-11 14:21:12 ERROR:busco.BuscoRunner	The parameter "in (--in)" was not provided. Please add it in the config file or provide it through the command line
+2023-08-11 14:21:12 DEBUG:busco.BuscoRunner	The parameter "in (--in)" was not provided. Please add it in the config file or provide it through the command line
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/configparser.py", line 791, in get
+    value = d[option]
+  File "/usr/lib/python3.10/collections/__init__.py", line 986, in __getitem__
+    return self.__missing__(key)            # support subclasses that define __missing__
+  File "/usr/lib/python3.10/collections/__init__.py", line 978, in __missing__
+    raise KeyError(key)
+KeyError: 'in'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/busco/BuscoConfig.py", line 500, in _check_mandatory_keys_exist
+    value = self.get("busco_run", param)
+  File "/usr/lib/python3.10/configparser.py", line 794, in get
+    raise NoOptionError(option, section)
+configparser.NoOptionError: No option 'in' in section: 'busco_run'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/busco/run_BUSCO.py", line 103, in run
+    self.load_config()
+  File "/usr/lib/python3/dist-packages/busco/run_BUSCO.py", line 94, in load_config
+    self.config_manager.load_busco_config_main(sys.argv)
+  File "/usr/lib/python3/dist-packages/busco/BuscoLogger.py", line 62, in wrapped_func
+    self.retval = func(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/busco/ConfigManager.py", line 56, in load_busco_config_main
+    self.config_main.validate()
+  File "/usr/lib/python3/dist-packages/busco/BuscoConfig.py", line 406, in validate
+    self._check_mandatory_keys_exist()
+  File "/usr/lib/python3/dist-packages/busco/BuscoLogger.py", line 58, in wrapped_func
+    self.retval = func(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/busco/BuscoConfig.py", line 559, in _check_mandatory_keys_exist
+    raise BatchFatalError(
+busco.Exceptions.BatchFatalError: The parameter "in (--in)" was not provided. Please add it in the config file or provide it through the command line
+2023-08-11 14:21:12 ERROR:busco.BuscoRunner	BUSCO analysis failed !
+2023-08-11 14:21:12 ERROR:busco.BuscoRunner	Check the logs, read the user guide (https://busco.ezlab.org/busco_userguide.html), and check the BUSCO issue board on https://gitlab.com/ezlab/busco/issues
+
