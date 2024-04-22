@@ -1,11 +1,11 @@
 import Bio.SeqIO
 import subprocess
-import os
 
-# Carregue as sequências do arquivo FASTA
+
+""" # Carregue as sequências do arquivo FASTA
 seq1 = Bio.SeqIO.read("/home/mateus/Desktop/teste/seq1.fasta", "fasta")
 seq2 = Bio.SeqIO.read("/home/mateus/Desktop/teste/seq2.fasta", "fasta")
-seq3 = Bio.SeqIO.read("/home/mateus/Desktop/teste/seq3.fasta", "fasta")
+seq3 = Bio.SeqIO.read("/home/mateus/Desktop/teste/seq3.fasta", "fasta") """
 
 # para mostrar pro BLAST a sequencia de referencia no alignment multiplo
 sequencia_de_referencia = '/home/mateus/Desktop/teste/seq1.fasta'
