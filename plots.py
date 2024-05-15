@@ -24,7 +24,7 @@ for container in ax.containers:
 #Show the plot
 plt.tight_layout()
 
-# Save the plot with 400 DPI
+# Save the plot with 400 DPI - uncomment to save
 # plt.savefig('stacked_bar_plot.png', dpi=400)
 
 plt.show()
